@@ -57,21 +57,6 @@ from torch.utils.data import TensorDataset, DataLoader
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 ```
 
-**知识点卡片：**
-
-
-
-
-
-
-| 代码                                     | 是什么                 | 说明                                                         |
-| :--------------------------------------- | :--------------------- | :----------------------------------------------------------- |
-| `torch`                                  | PyTorch 主库           | 当前最流行的深度学习框架之一（与 TensorFlow、JAX 并列）。把"矩阵运算"包装成"神经网络层"，自动帮你算梯度。 |
-| `torch.nn`                               | 神经网络模块           | 里面装着 LSTM、Linear、Loss 函数等预制零件，像乐高积木一样拼模型。 |
-| `TensorDataset`                          | 把 X 和 Y 打包成数据集 | 告诉 PyTorch："这两堆张量是一对一对的，第 i 个 X 对应第 i 个 Y。" |
-| `DataLoader`                             | 批量加载器             | 每次从数据集里随机抽 `batch_size=64` 个样本，组成一个"批次"喂给模型。支持多线程、打乱顺序、自动拼接。 |
-| `torch.device("cuda" if ... else "cpu")` | 自动选择计算设备       | 有 NVIDIA 显卡就用 GPU（cuda）加速训练，没有就用 CPU。       |
-
 #### 技术扩展：深度学习框架家族
 
 | 框架                  | 出品方         | 动态图/静态图        | 学习曲线             | 工业部署                        | 适用场景                                                     |
@@ -107,24 +92,6 @@ class EnhancedLSTM(nn.Module):
         out = self.fc(out[:, -1, :])
         return out
 ```
-
-**知识点卡片：**
-
-
-
-
-
-
-| 代码                                 | 是什么             | 说明                                                         |
-| :----------------------------------- | :----------------- | :----------------------------------------------------------- |
-| `class EnhancedLSTM(nn.Module)`      | 定义一个神经网络类 | 继承 `nn.Module` 是 PyTorch 的"规矩"，表示"我是一个神经网络层/模型"。 |
-| `super().__init__()`                 | 调用父类构造函数   | 必须写，否则 PyTorch 内部机制（如参数注册）不会生效。        |
-| `nn.LSTM(...)`                       | LSTM 层            | 长短期记忆网络（Long Short-Term Memory），RNN 的升级版，能记住长期依赖（如 30 分钟前的温度趋势），同时避免梯度消失。 |
-| `batch_first=True`                   | 数据维度约定       | 输入张量的形状是 `(batch, seq_len, features)` 而不是 `(seq_len, batch, features)`。前者更符合人类直觉（先数有几个样本，再看每个样本多长）。 |
-| `dropout=0.2`                        | 随机失活           | 训练时，每层有 20% 的神经元被临时" shut down"，强迫模型不依赖某一条路径，防止过拟合。 |
-| `nn.Linear(hidden_size, output_len)` | 全连接层           | 把 LSTM 输出的"高维隐状态"（128 维）映射到"预测目标"（30 维，即未来 30 分钟的差分）。 |
-| `forward(self, x)`                   | 前向传播函数       | 定义"输入 x 怎么变成输出"。这是模型被调用时实际执行的代码。  |
-| `out[:, -1, :]`                      | 取最后时刻的输出   | LSTM 对 30 分钟输入的每一分钟都输出一个隐状态。`[:, -1, :]` 只取**最后一个时间步**的隐状态（认为它包含了前面 30 分钟的所有记忆），送给全连接层预测未来。 |
 
 #### 技术扩展：时序神经网络架构家族
 
@@ -167,20 +134,6 @@ Y_train_diff = torch.FloatTensor(train_data['Y_diff']).to(device)
 train_loader = DataLoader(TensorDataset(X_train, Y_train_diff), batch_size=64, shuffle=True)
 ```
 
-**知识点卡片：**
-
-
-
-
-
-
-| 代码                                           | 是什么                          | 说明                                                         |
-| :--------------------------------------------- | :------------------------------ | :----------------------------------------------------------- |
-| `torch.FloatTensor(...)`                       | 把 NumPy 数组转成 32 位浮点张量 | 神经网络的"食物"必须是张量。`Float`（32位）比 `Double`（64位）省内存、算得快，且精度足够。 |
-| `.to(device)`                                  | 把张量搬到 GPU/CPU              | 如果 `device` 是 cuda，这一步会把数据从内存复制到显存。所有参与计算的张量必须在同一设备上。 |
-| `TensorDataset(X, Y)`                          | 配对数据集                      | 像拉链一样把 X 和 Y 并在一起，第 i 个样本就是 `(X[i], Y[i])`。 |
-| `DataLoader(..., batch_size=64, shuffle=True)` | 批量加载器                      | 每次从 4015 个样本中**随机抽 64 个**，组成一个批次。`shuffle=True` 表示每轮（Epoch）都重新打乱顺序。 |
-
 #### 技术扩展：批量训练策略家族
 
 
@@ -219,23 +172,6 @@ for epoch in range(1, EPOCHS + 1):
         optimizer.step()
         train_loss += loss.item()
 ```
-
-**知识点卡片：**
-
-
-
-
-
-
-| 代码                                 | 是什么             | 说明                                                         |
-| :----------------------------------- | :----------------- | :----------------------------------------------------------- |
-| `model.train()`                      | 切换到训练模式     | 启用 Dropout（随机关神经元）和 BatchNorm（用当前批统计量）。**必须写**，否则 Dropout 不工作，模型评估时会过拟合。 |
-| `optimizer.zero_grad()`              | 清空旧梯度         | PyTorch 默认累积梯度。如果不清空，本轮梯度会叠加上一轮的，导致训练崩溃。 |
-| `pred_diff = model(x_batch)`         | 前向传播           | 把 64 个样本的 X 喂进网络，得到 64×30 的预测差分输出。       |
-| `criterion(pred_diff, y_diff_batch)` | 算损失             | 比较预测值和真实值的差距，得到一个标量 Loss。                |
-| `loss.backward()`                    | 反向传播           | 自动微分引擎从 Loss 出发，沿着计算图往回走，算出每个权重参数对 Loss 的"责任"（梯度）。这是深度学习最核心的魔法。 |
-| `optimizer.step()`                   | 更新权重           | 根据梯度和学习率，用 Adam 算法调整每个权重，让 Loss 减小。   |
-| `loss.item()`                        | 提取 Python 浮点数 | 把 PyTorch 的标量张量转成普通数字，用于累加和打印。          |
 
 #### 技术扩展：优化器家族
 
@@ -337,18 +273,6 @@ if val_loss < best_val_loss:
     torch.save(model.state_dict(), Path(MODEL_DIR) / f"best_model_v4_diff{time.time()}.pth")
 ```
 
-**知识点卡片：**
-
-
-
-
-
-
-| 代码                 | 是什么           | 说明                                                         |
-| :------------------- | :--------------- | :----------------------------------------------------------- |
-| `model.state_dict()` | 模型的"参数字典" | 只保存权重和偏置（如 LSTM 的 W_hh, b_hh 等），不保存网络结构代码。体积小（通常几 MB），加载快。 |
-| `torch.save(...)`    | 序列化保存       | 把 Python 对象（这里是字典）存成二进制文件。                 |
-
 #### 技术扩展：模型保存策略家族
 
 
@@ -366,83 +290,8 @@ if val_loss < best_val_loss:
 
 >  **重要坑点**：代码中用了 `f"best_model_v4_diff{time.time()}.pth"`，会在文件名末尾追加一串时间戳数字（如 `best_model_v4_diff1716541234.567.pth`）。这会导致 Step 6 加载模型时**找不到固定文件名**！建议改为固定名称：
 >
-> Python
->
-> 复制
->
 > ```python
 > torch.save(model.state_dict(), Path(MODEL_DIR) / "best_model_v4_diff.pth")
 > ```
 
 ------
-
-## 四、整体知识地图与学习路径
-
-
-
-```plain
-第1周：PyTorch 基础
-    ├─ Tensor 的创建、类型转换（FloatTensor）、设备转移（to/cuda）
-    ├─ autograd 自动微分（backward, grad）
-    ├─ nn.Module 的继承与 forward
-    └─ 参数查看（model.parameters(), state_dict）
-
-第2周：数据加载流水线
-    ├─ TensorDataset 与 DataLoader
-    ├─ batch_size 的选择与显存估算
-    ├─ shuffle 的时序数据注意事项
-    └─ 数据类型（float32 vs float64）、设备一致性检查
-
-第3周：神经网络基础
-    ├─ 全连接层 Linear：y = Wx + b
-    ├─ 激活函数：tanh, ReLU, Sigmoid
-    ├─ Dropout：原理与 train/eval 模式切换
-    └─ 前向传播与反向传播的直觉理解（链式法则）
-
-第4周：循环神经网络
-    ├─ RNN 的梯度消失问题（为什么传统 RNN 记不住长序列）
-    ├─ LSTM 的门控机制：输入门、遗忘门、输出门
-    ├─ LSTM 的 PyTorch 参数：input_size, hidden_size, num_layers, batch_first
-    ├─ 多层 LSTM 的信息逐层抽象
-    └─ 取最后时刻输出 out[:, -1, :] 的物理意义
-
-第5周：训练技巧
-    ├─ 损失函数：MSE vs MAE vs SmoothL1（Huber）
-    ├─ 优化器：Adam 的直觉（动量 + 自适应学习率）
-    ├─ 学习率调度：ReduceLROnPlateau 的 patience/factor 调参
-    ├─ 早停（Early Stopping）：与 ReduceLROnPlateau 配合使用
-    └─ 模型保存：state_dict 与完整模型的区别
-```
-
-------
-
-## 五、常见坑点与自查清单
-
-
-
-
-
-
-| 坑点                                              | 现象                                                         | 排查方法                                                     |
-| :------------------------------------------------ | :----------------------------------------------------------- | :----------------------------------------------------------- |
-| **忘记 `zero_grad()`**                            | Loss 不降反升，或震荡剧烈                                    | 检查每轮 batch 循环开头是否有 `optimizer.zero_grad()`        |
-| **忘记 `model.train()` / `model.eval()`**         | 验证 Loss 远低于训练 Loss（Dropout 在验证时仍工作）          | 训练循环开头加 `model.train()`，验证前加 `model.eval()`      |
-| **文件名带 `time.time()`**                        | Step 6 加载模型报错 `FileNotFoundError`                      | 改为固定文件名，或 Step 6 用 glob 匹配最新文件               |
-| **张量不在同一设备**                              | 报错 `RuntimeError: Expected all tensors to be on the same device` | 确认 `X_train.to(device)` 和 `model.to(device)` 都已执行     |
-| **损失函数输入维度不匹配**                        | 报错 `The size of tensor a (30) must match the size of tensor b (64)` | 检查模型输出 `(batch, 30)` 与标签 `(batch, 30)` 形状一致；注意 `squeeze` 是否误删了 batch 维度 |
-| **验证集 Loss 用 criterion 算，但没切 eval 模式** | 验证 Loss 含 Dropout 随机性，每次运行结果不同                | 验证段必须包在 `with torch.no_grad():` 和 `model.eval()` 内  |
-| **学习率降到 1e-8 还在训**                        | 最后几十轮 Loss 纹丝不动，浪费时间                           | 设置 Early Stopping（如 patience=10 轮不下降就停止），或减小总 Epoch |
-
-------
-
-## 六、技术验证建议
-
-1. **改容量**：把 `hidden_size` 从 128 改成 32 和 256，观察验证 Loss 的变化，理解"欠拟合"和"过拟合"在 Loss 曲线上的表现。
-2. **换损失函数**：把 `nn.SmoothL1Loss()` 改成 `nn.MSELoss()`，故意在训练数据里加几个异常值（如把某条样本的 Y 改成 10），对比两种损失函数的收敛稳定性。
-3. **可视化梯度**：在 `loss.backward()` 后打印 `model.lstm.weight_ih_l0.grad.mean()`，观察梯度大小是否健康（太小=梯度消失，太大=梯度爆炸）。
-4. **调学习率**：把初始 LR 从 0.001 改成 0.01 和 0.0001，观察收敛速度和最终 Loss。
-5. **加早停**：在训练循环里加入 `if lr < 1e-6 and no_improve_count > 10: break`，避免无意义训练。
-
-------
-
-**后续流程衔接**：Step 6 将加载训练好的模型，在 Demo 数据上做滚动预测，并把差分还原为绝对温度。我们会接触到模型推理（`model.eval()` + `torch.no_grad()`）、差分还原公式、滚动评估指标（MAE/RMSE）、以及 Matplotlib 的高级可视化（多子图、轨迹拼接）。这是整个 Pipeline 的"临门一脚"——从"模型训练好"到"给操作工看预测曲线"。

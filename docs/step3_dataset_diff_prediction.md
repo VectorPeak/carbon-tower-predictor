@@ -298,8 +298,6 @@ y_diff = np.diff(y_abs_with_last, axis=0)
 >
 > plain
 >
-> 复制
->
 > ```plain
 > 真实温度序列 = last_known_abs + cumsum([Δy_1, Δy_2, ..., Δy_30])
 > ```
@@ -361,71 +359,3 @@ np.savez_compressed(Path(DATASET_DIR) / "train_data_diff.npz",
 4. **读取速度**：`np.load()` 直接映射到内存，比 CSV 快 100 倍以上。
 
 ------
-
-## 四、整体知识地图与学习路径
-
-
-
-```plain
-第1周：NumPy 基础
-    ├─ ndarray 的创建、索引、切片
-    ├─ shape、dtype、axis 概念
-    ├─ np.vstack, np.diff, np.cumsum
-    └─ np.savez / np.load
-
-第2周：特征工程思想
-    ├─ 原始特征 vs 派生特征（差分、移动统计）
-    ├─ 为什么时序数据需要"速度"特征
-    ├─ 特征构造的物理意义（不是数学游戏）
-    └─ 数据泄露的概念与防护（shift、时间切分）
-
-第3周：数据标准化
-    ├─ Z-score 的数学推导与直觉
-    ├─ 训练集统计量 vs 全量统计量（泄露风险）
-    ├─ 异常值对不同标准化方法的影响
-    └─ 工业数据的"零方差"处理
-
-第4周：滑动窗口与样本构造
-    ├─ 滑动窗口的 stride、input_len、output_len
-    ├─ 有重叠 vs 无重叠采样的统计影响
-    ├─ 序列到序列（Seq2Seq）的样本对设计
-    └─ 批量数据加载（DataLoader，Step 5 会深入）
-
-第5周：差分预测的思想升华
-    ├─ 非平稳序列 vs 平稳序列
-    ├─ 差分与 ARIMA 模型的关系
-    ├─ 基线漂移的物理本质（为什么绝对预测难）
-    └─ 还原逻辑：从差分回到绝对值（cumsum）
-```
-
-------
-
-## 五、常见坑点与自查清单
-
-
-
-
-
-
-| 坑点                   | 现象                                                        | 排查方法                                                     |
-| :--------------------- | :---------------------------------------------------------- | :----------------------------------------------------------- |
-| `diff()` 后未处理 NaN  | 滑动窗口切分时样本数骤减，或模型输入含 NaN 导致 Loss 为 NaN | 检查 `df.isnull().sum()`，确认 `ffill/bfill/dropna` 已执行   |
-| 标准化用全量数据算 μ/σ | 验证集指标虚高，上线后暴跌                                  | 打印 `means` 和 `stds`，确认只从 `df_train` 计算             |
-| `shift(lag)` 方向搞反  | 特征变成"未来信息"，训练 Loss 极低但上线失效                | 检查 JSON 里的 lag 是正数，且 `shift(lag)` 是"往上挪"（提前出现） |
-| stride 太小导致过拟合  | 训练 Loss 很低，验证 Loss 很高                              | 尝试增大 stride（如 10），观察验证 Loss 是否改善             |
-| 差分还原时忘记乘 std   | 预测曲线形状对，但数值尺度差 10 倍以上                      | Step 5 打印 `target_std`，确认还原公式 `× target_std`        |
-| `Y_last_abs` 索引错位  | 预测曲线整体平移一个常数偏移                                | 检查 `last_known_abs` 是否对应 `i + input_len - 1`（输入窗口最后一个点） |
-
-------
-
-## 六、技术验证建议
-
-1. **去掉 diff 试试**：把 `create_diff_sliding_windows` 里的差分逻辑注释掉，直接预测绝对温度，观察 Step 5 的训练 Loss 和收敛速度差异。
-2. **换标准化方法**：把 Z-score 改成 `MinMaxScaler`（`(x - min) / (max - min)`），观察对训练稳定性的影响。
-3. **加 EMA 特征**：在 `add_momentum_features` 里增加 `df[f"{feat}_ema5"] = df[feat].ewm(span=5).mean()`，观察 Step 3 入选特征的变化。
-4. **调窗口大小**：把 `INPUT_LEN` 从 30 改成 60 或 10，观察模型对长/短期记忆的依赖程度。
-5. **可视化一个样本**：打印 `X_train[0]` 和 `Y_train_diff[0]`，理解"输入 30 分钟多变量序列 → 输出 30 分钟温度变化量"的具体数值形态。
-
-------
-
-**后续流程衔接**：Step 4 将用 PyTorch 搭建 LSTM 神经网络，学习从 30 分钟输入到 30 分钟差分输出的映射。我们会接触到 `nn.LSTM`、`TensorDataset`、`DataLoader`、`SmoothL1Loss`、学习率调度器等深度学习核心组件。建议先确保本章的"滑动窗口"和"差分还原"逻辑完全理解，因为 Step 4 的模型本质上就是在拟合 `X → Y_diff` 这个函数。
