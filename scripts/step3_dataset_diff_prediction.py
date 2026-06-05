@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Step 4 终极版：差分预测数据集构造
+Step 3：差分预测数据集构造
 核心思想：不预测绝对温度，预测温度的变化量(差分)。
-这能极大减轻模型学习历史基线的负担，让模型把全部精力放在学习"扰动响应"上。
+该设计用于降低温度基线漂移对模型训练的影响，使模型重点拟合过程扰动与温度变化之间的关系。
 """
 import pandas as pd
 import numpy as np
@@ -73,7 +73,7 @@ def create_diff_sliding_windows(df, input_len, output_len, stride, target_var):
     X_list, Y_diff_list, Y_last_abs_list = [], [], []
     for i in range(0, len(df) - input_len - output_len + 1, stride):
         x_win = data_X[i: i + input_len]
-        # 🚨 核心改变：Y_target 变成差分值
+        # 构造差分标签：Y_target 表示未来每一分钟的温度变化量
         # Y_absolute: [y0, y1, ..., y29]
         y_abs = data_Y_absolute[i + input_len: i + input_len + output_len]
         # 差分计算：delta_y = y_t - y_{t-1}
@@ -115,11 +115,11 @@ if __name__ == "__main__":
     X_demo, Y_demo_diff, Y_demo_last = create_diff_sliding_windows(df_demo_norm, INPUT_LEN, OUTPUT_LEN, STRIDE,
                                                                    TARGET_VAR)
     print(f"  训练集 X: {X_train.shape}, Y_diff: {Y_train_diff.shape}")
-    # 🚨 注意：我们要把 Y_last_abs 也存下来，评估时需要用它把差分还原成绝对温度
+    # 保存输入窗口末端的绝对温度，用于评估阶段将差分序列还原为绝对温度
     os.makedirs(DATASET_DIR, exist_ok=True)
     print(f"\n保存差分数据集至 {DATASET_DIR} ...")
     np.savez_compressed(Path(DATASET_DIR) / "train_data_diff.npz", X=X_train, Y_diff=Y_train_diff,
                         Y_last_abs=Y_train_last)
     np.savez_compressed(Path(DATASET_DIR) / "val_data_diff.npz", X=X_val, Y_diff=Y_val_diff, Y_last_abs=Y_val_last)
     np.savez_compressed(Path(DATASET_DIR) / "demo_data_diff.npz", X=X_demo, Y_diff=Y_demo_diff, Y_last_abs=Y_demo_last)
-    print("\n[DONE] Step 4 终极版执行完毕！模型即将学习'如何变化'而非'绝对数值'。")
+    print("\n差分预测数据集构造完成。")
