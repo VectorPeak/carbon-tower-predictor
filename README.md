@@ -1,3 +1,5 @@
+<div align="center">
+
 # Carbon Tower Predictor | 工业碳化塔取出液温度预测性维护系统
 
 Industrial time-series forecasting pipeline for carbonation tower temperature prediction and predictive maintenance  
@@ -10,6 +12,8 @@ Industrial time-series forecasting pipeline for carbonation tower temperature pr
 ![maintenance](https://img.shields.io/badge/predictive-maintenance-green)
 
 简体中文 | English later
+
+</div>
 
 ```text
 raw sensor data -> feature engineering -> diff dataset -> LSTM training -> rolling forecast
