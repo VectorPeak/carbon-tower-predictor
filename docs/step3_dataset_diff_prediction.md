@@ -208,9 +208,7 @@ def normalize_and_save_params(df_train, df_val, df_demo, features):
 
 #### 3.5.1 滑动窗口切分
 
-Python
 
-复制
 
 ```python
 for i in range(0, len(df) - input_len - output_len + 1, stride):
@@ -221,9 +219,7 @@ for i in range(0, len(df) - input_len - output_len + 1, stride):
 
 **可视化：**
 
-plain
 
-复制
 
 ```plain
 时间轴: [0][1][2][3][4][5][6][7] ... [29][30][31] ... [59]
@@ -241,7 +237,6 @@ stride=5: 下一次窗口从 i=5 开始
 
 #### 技术扩展：滑动窗口策略家族
 
-表格
 
 
 
@@ -258,9 +253,7 @@ stride=5: 下一次窗口从 i=5 开始
 
 #### 3.5.2 差分标签构造（核心创新）
 
-Python
 
-复制
 
 ```python
 y_abs = data_Y_absolute[i + input_len: i + input_len + output_len]
@@ -282,7 +275,6 @@ y_diff = np.diff(y_abs_with_last, axis=0)
 
 #### 技术扩展：时序预测目标设计家族
 
-表格
 
 
 
@@ -320,9 +312,7 @@ y_diff = np.diff(y_abs_with_last, axis=0)
 
 #### 3.5.3 保存基准点：`Y_last_abs_list`
 
-Python
 
-复制
 
 ```python
 Y_last_abs_list.append(last_known_abs)
@@ -340,9 +330,7 @@ Y_last_abs_list.append(last_known_abs)
 
 ### 3.6 保存为 NPZ 格式
 
-Python
 
-复制
 
 ```python
 np.savez_compressed(Path(DATASET_DIR) / "train_data_diff.npz", 
@@ -351,7 +339,6 @@ np.savez_compressed(Path(DATASET_DIR) / "train_data_diff.npz",
 
 #### 技术扩展：序列数据存储格式家族
 
-表格
 
 
 
@@ -377,9 +364,7 @@ np.savez_compressed(Path(DATASET_DIR) / "train_data_diff.npz",
 
 ## 四、整体知识地图与学习路径
 
-plain
 
-复制
 
 ```plain
 第1周：NumPy 基础
@@ -417,7 +402,6 @@ plain
 
 ## 五、常见坑点与自查清单
 
-表格
 
 
 

@@ -229,7 +229,6 @@ with open(config_path, 'w', encoding='utf-8') as f:
 
 ## 四、整体知识地图与学习路径
 
-plain
 
 
 

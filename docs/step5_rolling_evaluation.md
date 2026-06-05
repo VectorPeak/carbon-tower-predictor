@@ -71,7 +71,6 @@ NUM_LAYERS = 3          # LSTM 层数（必须与 Step 4 训练时的模型结�
 
 ###  配置区铁律：三个"必须一致"
 
-表格
 
 
 
@@ -87,9 +86,7 @@ NUM_LAYERS = 3          # LSTM 层数（必须与 Step 4 训练时的模型结�
 
 ## 三、核心函数：`diff_to_absolute` —— 把"变化量"翻译回"温度值"
 
-Python
 
-复制
 
 ```python
 def diff_to_absolute(y_last_abs_norm, y_diff_norm, target_mean, target_std):
@@ -102,7 +99,6 @@ def diff_to_absolute(y_last_abs_norm, y_diff_norm, target_mean, target_std):
 
 **四步还原公式：**
 
-表格
 
 
 
@@ -125,9 +121,7 @@ def diff_to_absolute(y_last_abs_norm, y_diff_norm, target_mean, target_std):
 
 ### 4.1 模块 A：滚动评估（上线模式）
 
-Python
 
-复制
 
 ```python
 for i in range(0, len(X_demo), 1):
@@ -149,9 +143,7 @@ for i in range(0, len(X_demo), 1):
 
 ### 4.2 模块 B：长程发散分析
 
-Python
 
-复制
 
 ```python
 sample_indices = [k_start, k_start + 2, k_start + 4, k_start + 6]
@@ -178,7 +170,6 @@ for i in sample_indices:
 
 #### 技术扩展：时序预测评估指标家族
 
-表格
 
 
 
@@ -203,9 +194,7 @@ for i in sample_indices:
 
 #### 4.3.1 索引对齐：为什么 `k_step = ROLL_STRIDE // 5`？
 
-Python
 
-复制
 
 ```python
 dataset_stride = 5  # Step 3 切分时的固定步长，不可改
@@ -221,9 +210,7 @@ k_step = ROLL_STRIDE // dataset_stride  # 10 // 5 = 2
 
 #### 4.3.2 轨迹拼接逻辑
 
-Python
 
-复制
 
 ```python
 stitched_pred_time = []
@@ -250,7 +237,6 @@ for r in range(num_rolls):
 
 #### 技术扩展：工业可视化策略家族
 
-表格
 
 
 
@@ -270,9 +256,7 @@ for r in range(num_rolls):
 
 ### 5.1 `with torch.no_grad():` —— 推理时必须关梯度
 
-Python
 
-复制
 
 ```python
 with torch.no_grad():
@@ -289,9 +273,7 @@ with torch.no_grad():
 
 ### 5.2 `model.eval()` —— 关掉 Dropout
 
-Python
 
-复制
 
 ```python
 model.eval()
@@ -310,9 +292,7 @@ model.eval()
 
 ## 六、整体知识地图与学习路径
 
-plain
 
-复制
 
 ```plain
 第1周：PyTorch 推理基础
@@ -351,7 +331,6 @@ plain
 
 ## 七、常见坑点与自查清单
 
-表格
 
 
 

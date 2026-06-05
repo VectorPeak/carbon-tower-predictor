@@ -21,9 +21,7 @@ Step 3 给了我们一堆"样本对"：
 
 ## 二、整体流程图（文字版）
 
-plain
 
-复制
 
 ```plain
 加载 train_data_diff.npz / val_data_diff.npz
@@ -49,9 +47,7 @@ best_model_v4_diff.pth
 
 ### 3.1 PyTorch 基础导入与设备配置
 
-Python
 
-复制
 
 ```python
 import torch
@@ -63,7 +59,6 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 **知识点卡片：**
 
-表格
 
 
 
@@ -97,9 +92,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 ### 3.2 模型定义：`EnhancedLSTM`
 
-Python
 
-复制
 
 ```python
 class EnhancedLSTM(nn.Module):
@@ -117,7 +110,6 @@ class EnhancedLSTM(nn.Module):
 
 **知识点卡片：**
 
-表格
 
 
 
@@ -136,7 +128,6 @@ class EnhancedLSTM(nn.Module):
 
 #### 技术扩展：时序神经网络架构家族
 
-表格
 
 
 
@@ -168,9 +159,7 @@ class EnhancedLSTM(nn.Module):
 
 ### 3.3 数据加载与批量训练
 
-Python
 
-复制
 
 ```python
 X_train = torch.FloatTensor(train_data['X']).to(device)
@@ -180,7 +169,6 @@ train_loader = DataLoader(TensorDataset(X_train, Y_train_diff), batch_size=64, s
 
 **知识点卡片：**
 
-表格
 
 
 
@@ -195,7 +183,6 @@ train_loader = DataLoader(TensorDataset(X_train, Y_train_diff), batch_size=64, s
 
 #### 技术扩展：批量训练策略家族
 
-表格
 
 
 
@@ -218,9 +205,7 @@ train_loader = DataLoader(TensorDataset(X_train, Y_train_diff), batch_size=64, s
 
 ### 3.4 训练循环：前向、损失、反向、更新
 
-Python
 
-复制
 
 ```python
 for epoch in range(1, EPOCHS + 1):
@@ -237,7 +222,6 @@ for epoch in range(1, EPOCHS + 1):
 
 **知识点卡片：**
 
-表格
 
 
 
@@ -255,7 +239,6 @@ for epoch in range(1, EPOCHS + 1):
 
 #### 技术扩展：优化器家族
 
-表格
 
 
 
@@ -275,9 +258,7 @@ for epoch in range(1, EPOCHS + 1):
 
 ### 3.5 损失函数：`SmoothL1Loss`（Huber Loss）
 
-Python
 
-复制
 
 ```python
 criterion = nn.SmoothL1Loss()
@@ -290,9 +271,7 @@ criterion = nn.SmoothL1Loss()
 
 **公式：**
 
-plain
 
-复制
 
 ```plain
 L = 0.5 * (pred - true)^2          if |pred - true| < 1
@@ -303,7 +282,6 @@ L = |pred - true| - 0.5            otherwise
 
 #### 技术扩展：回归损失函数家族
 
-表格
 
 
 
@@ -321,9 +299,7 @@ L = |pred - true| - 0.5            otherwise
 
 ### 3.6 学习率调度：`ReduceLROnPlateau`
 
-Python
 
-复制
 
 ```python
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=5)
@@ -336,7 +312,6 @@ scheduler.step(val_loss)
 
 #### 技术扩展：学习率调度策略家族
 
-表格
 
 
 
@@ -354,9 +329,7 @@ scheduler.step(val_loss)
 
 ### 3.7 模型保存与状态管理
 
-Python
 
-复制
 
 ```python
 if val_loss < best_val_loss:
@@ -366,7 +339,6 @@ if val_loss < best_val_loss:
 
 **知识点卡片：**
 
-表格
 
 
 
@@ -379,7 +351,6 @@ if val_loss < best_val_loss:
 
 #### 技术扩展：模型保存策略家族
 
-表格
 
 
 
@@ -407,9 +378,7 @@ if val_loss < best_val_loss:
 
 ## 四、整体知识地图与学习路径
 
-plain
 
-复制
 
 ```plain
 第1周：PyTorch 基础
@@ -449,7 +418,6 @@ plain
 
 ## 五、常见坑点与自查清单
 
-表格
 
 
 
