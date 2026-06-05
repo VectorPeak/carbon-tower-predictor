@@ -81,13 +81,13 @@ def visualize_indicator_types(result_df, target_var):
     plot_path = Path(FIGURE_DIR) / "lead_indicator_scatter.png"
     plt.savefig(plot_path, dpi=150, bbox_inches='tight')
     plt.show()
-    print(f"📊 领先指标散点图已保存至: {plot_path}")
+    print(f"[PLOT] 领先指标散点图已保存至: {plot_path}")
 
 
 def save_feature_config(valid_df, target_var):
     """生成供 Step 4 使用的特征配置文件，并打印最终入选名单"""
     print("\n" + "=" * 60)
-    print(f"🔍 预测特征筛选结果 (目标: {target_var})")
+    print(f"[INFO] 预测特征筛选结果 (目标: {target_var})")
     print("（已剔除滞后指标和弱相关噪音）")
     print("=" * 60)
     feature_config = {}
@@ -99,7 +99,7 @@ def save_feature_config(valid_df, target_var):
         # 添加到配置字典
         feature_config[feat] = lag
         # 打印入选理由
-        tag = "🚀 发现领先指标!" if typ == '领先' else "🔄 同步指标"
+        tag = "[LEAD] 发现领先指标" if typ == '领先' else "[SYNC] 同步指标"
         print(f"  {tag} [{feat}]")
         print(f"     -> 相关性: {corr:.4f}, 领先时间: {lag} 分钟")
     # 保存配置，供 Step 4 读取
@@ -107,7 +107,7 @@ def save_feature_config(valid_df, target_var):
     config_path = Path(CONFIG_DIR) / "feature_config.json"
     with open(config_path, 'w', encoding='utf-8') as f:
         json.dump(feature_config, f, ensure_ascii=False, indent=4)
-    print(f"\n✅ 特征配置已保存至: {config_path}")
+    print(f"\n[DONE] 特征配置已保存至: {config_path}")
     print(f"共入选 {len(feature_config)} 个特征，其中领先指标 {len(valid_df[valid_df['type'] == '领先'])} 个。")
 
 
@@ -120,7 +120,7 @@ if __name__ == "__main__":
     print("=" * 60)
     file_path = Path(MERGED_DATA_DIR) / MERGED_FILENAME
     if not file_path.exists():
-        print(f"❌ 找不到宽表文件: {file_path}，请先执行 Step 1&2！")
+        print(f"[ERROR] 找不到宽表文件: {file_path}，请先执行 Step 1&2！")
     else:
         df = pd.read_parquet(file_path)
         print(f"成功读取宽表，共 {len(df.columns) - 1} 个候选特征变量。\n")

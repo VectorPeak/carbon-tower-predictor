@@ -122,4 +122,4 @@ if __name__ == "__main__":
                         Y_last_abs=Y_train_last)
     np.savez_compressed(Path(DATASET_DIR) / "val_data_diff.npz", X=X_val, Y_diff=Y_val_diff, Y_last_abs=Y_val_last)
     np.savez_compressed(Path(DATASET_DIR) / "demo_data_diff.npz", X=X_demo, Y_diff=Y_demo_diff, Y_last_abs=Y_demo_last)
-    print("\n🎉 Step 4 终极版执行完毕！模型即将学习'如何变化'而非'绝对数值'。")
+    print("\n[DONE] Step 4 终极版执行完毕！模型即将学习'如何变化'而非'绝对数值'。")

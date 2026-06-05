@@ -93,14 +93,14 @@ def rolling_evaluation_diff():
         rolling_truths_abs.extend(true_abs_sequence[:ROLL_STRIDE])
     mae_rolling = np.mean(np.abs(np.array(rolling_preds_abs) - np.array(rolling_truths_abs)))
     print("\n" + "=" * 60)
-    print(f"🎯 【上线模式】滚动预测 (每{ROLL_STRIDE}分钟更新) 整体指标:")
+    print(f"[ONLINE] 【上线模式】滚动预测 (每{ROLL_STRIDE}分钟更新) 整体指标:")
     print(f"  MAE  (平均绝对误差): {mae_rolling:.4f} ℃")
     print("=" * 60)
     # ==========================================
     # 模块 B：长程预测发散分析 (保留原逻辑)
     # ==========================================
     print("\n" + "=" * 60)
-    print("🔍 【长程分析】拆解单次预测30分钟的误差发散情况:")
+    print("[ANALYSIS] 【长程分析】拆解单次预测30分钟的误差发散情况:")
     print("=" * 60)
     fig_long, axes_long = plt.subplots(2, 2, figsize=(16, 10))
     axes_long = axes_long.flatten()
@@ -123,12 +123,12 @@ def rolling_evaluation_diff():
         mae_5_10 = np.mean(np.abs(pred_abs_30min[5:10] - true_abs_30min[5:10]))
         mae_10_15 = np.mean(np.abs(pred_abs_30min[10:15] - true_abs_30min[10:15]))
         mae_15_30 = np.mean(np.abs(pred_abs_30min[15:30] - true_abs_30min[15:30]))
-        print(f"\n📊 第 {i + 1} 次预测 (起始点 Index: {i}):")
+        print(f"\n[WINDOW] 第 {i + 1} 次预测 (起始点 Index: {i}):")
         print(f"   ├─ 未来 0-5 分钟 MAE:  {mae_0_5:.4f} ℃  (高置信度区间)")
         print(f"   ├─ 未来 5-10 分钟 MAE: {mae_5_10:.4f} ℃")
         print(f"   ├─ 未来10-15 分钟 MAE: {mae_10_15:.4f} ℃")
         print(f"   └─ 未来15-30 分钟 MAE: {mae_15_30:.4f} ℃  (长程发散区间)")
-        print(f"   ➡️  整体30分钟 MAE:     {mae_30:.4f} ℃")
+        print(f"   -> 整体30分钟 MAE:     {mae_30:.4f} ℃")
         ax = axes_long[plot_idx]
         time_steps = np.arange(1, 31)
         ax.plot(time_steps, true_abs_30min, label='真实温度', color='blue', linewidth=2, marker='o', markersize=3)
@@ -148,7 +148,7 @@ def rolling_evaluation_diff():
     # 模块 C：模拟真实用户 DCS 滚动体验 —— 轨迹拼接版
     # ==========================================
     print("\n" + "=" * 60)
-    print("📺 【DCS模拟】实时滚动预测过程演示 (轨迹拼接)")
+    print("[DCS] 【DCS模拟】实时滚动预测过程演示 (轨迹拼接)")
     print("=" * 60)
 
     dataset_stride = 5  # Step 4 切分数据集时的 stride，固定为5，不可改
@@ -206,7 +206,7 @@ def rolling_evaluation_diff():
             prev_pred_seg = prev_preds[r - 1][:ROLL_STRIDE]
             true_seg = true_abs_series[current_idx - ROLL_STRIDE: current_idx]
             mae_seg = np.mean(np.abs(prev_pred_seg - true_seg))
-            print(f"⏱️ T+{r * ROLL_STRIDE} 分钟 | 过去{ROLL_STRIDE}分钟验证 MAE: {mae_seg:.4f} ℃")
+            print(f"[TIME] T+{r * ROLL_STRIDE} 分钟 | 过去{ROLL_STRIDE}分钟验证 MAE: {mae_seg:.4f} ℃")
 
         # 4. 画拼接轨迹
     ax_real.plot(stitched_pred_time, stitched_pred_vals,
@@ -230,7 +230,7 @@ def rolling_evaluation_diff():
     plt.tight_layout()
     plt.savefig(Path(FIGURE_DIR) / "realtime_rolling_simulation_stitched.png", dpi=150, bbox_inches='tight')
     plt.show()
-    print(f"\n📊 DCS模拟对比图已保存至: {Path(FIGURE_DIR) / 'realtime_rolling_simulation_stitched.png'}")
+    print(f"\n[PLOT] DCS模拟对比图已保存至: {Path(FIGURE_DIR) / 'realtime_rolling_simulation_stitched.png'}")
 
 
 if __name__ == "__main__":

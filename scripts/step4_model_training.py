@@ -97,14 +97,14 @@ def train_model():
             model_path = Path(MODEL_DIR) / "best_model_v4_diff.pth"
             torch.save(model.state_dict(), model_path)
             torch.save(model.state_dict(), Path(MODEL_DIR) / f"best_model_v4_diff_{time.time():.0f}.pth")
-            tag = "🏆 (新最优)"
+            tag = "[BEST] 新最优"
         else:
             tag = ""
         if epoch % 5 == 0 or epoch == 1:
             print(
                 f"Epoch [{epoch:03d}/{EPOCHS}] | Train Loss: {train_loss:.4f} | Val Loss: {val_loss:.4f} | LR: {optimizer.param_groups[0]['lr']} {tag}")
-    print("\n🎉 差分预测模型训练完毕！")
-    print("⚠️ 注意：模型现在输出的是'温度变化量'，评估时需要累加回绝对温度。")
+    print("\n[DONE] 差分预测模型训练完毕！")
+    print("[NOTE] 模型现在输出的是'温度变化量'，评估时需要累加回绝对温度。")
 
 
 if __name__ == "__main__":

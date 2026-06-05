@@ -65,7 +65,7 @@ def read_single_var_csv(file_path, col_name):
     # 转换时间格式
     df_selected['datetime'] = pd.to_datetime(df_selected['datetime'])
     df_selected = df_selected.set_index('datetime')
-    # ⚠️ 极其重要：剔除质量戳(192)等非数值数据，确保列类型为浮点数
+    # 重要：剔除质量戳(192)等非数值数据，确保列类型为浮点数
     df_selected[col_name] = pd.to_numeric(df_selected[col_name], errors='coerce')
     # 剔除因转换产生的NaN，并向前填充
     df_selected = df_selected.dropna().ffill().bfill()
@@ -83,13 +83,13 @@ def merge_all_data(raw_dir, vars_config):
                 try:
                     df_temp = read_single_var_csv(file_path, col_name)
                     all_dfs.append(df_temp)
-                    print(f"  ✅ 读取: {f} -> 列名: {col_name} (数据点: {len(df_temp)})")
+                    print(f"  [OK] 读取: {f} -> 列名: {col_name} (数据点: {len(df_temp)})")
                     file_found = True
                 except Exception as e:
-                    print(f"  ❌ 读取失败: {f}，错误: {e}")
+                    print(f"  [ERROR] 读取失败: {f}，错误: {e}")
                 break
         if not file_found:
-            print(f"  ⚠️ 警告: 未找到包含关键词 [{keyword}] 的文件！")
+            print(f"  [WARN] 未找到包含关键词 [{keyword}] 的文件！")
     if not all_dfs:
         return None
     print("\n正在按时间戳对齐合并 (外连接 -> 剔除缺失 -> 重采样至1分钟)...")
@@ -109,6 +109,6 @@ if __name__ == "__main__":
         os.makedirs(MERGED_DATA_DIR, exist_ok=True)
         save_path = Path(MERGED_DATA_DIR) / "merged_wide_table.parquet"
         df_final.to_parquet(save_path)
-        print(f"\n🎉 宽表已保存至: {save_path}")
+        print(f"\n[DONE] 宽表已保存至: {save_path}")
         print("\n数据概况 (验证不再是192)：")
         print(df_final.describe().T[['mean', 'std', 'min', 'max']])

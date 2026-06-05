@@ -2,7 +2,6 @@
 
 # Carbon Tower Predictor | 工业碳化塔取出液温度预测性维护系统
 
-Industrial time-series forecasting pipeline for carbonation tower temperature prediction and predictive maintenance  
 面向工业碳化塔取出液温度预测与预测性维护的时序建模方案
 
 ![python](https://img.shields.io/badge/python-3.10+-3776AB)
@@ -11,7 +10,7 @@ Industrial time-series forecasting pipeline for carbonation tower temperature pr
 ![timeseries](https://img.shields.io/badge/time--series-forecasting-5C7CFA)
 ![maintenance](https://img.shields.io/badge/predictive-maintenance-green)
 
-简体中文 | English later
+简体中文 | [English](README_EN.md)
 
 </div>
 
@@ -102,7 +101,7 @@ raw sensor data -> feature engineering -> diff dataset -> LSTM training -> rolli
 | **机器学习回归** | XGBoost/LightGBM | 小数据王者、训练极快、可解释性强 | 无法输出连续预测曲线、丢失时序微观形态 | 可作为基线，但非主模型 |
 | **深度时序专有** | TCN / PatchTST | 并行计算快、长程依赖强 | 数据量要求大、调参复杂 | 数据量足够后可升级 |
 | **异常检测专修** | Autoencoder | 无需预测未来，直接检测异常 | 无法提供"未来趋势"的前瞻性提示 | 仅作辅助 |
-| **LSTM直接多输出** | **Direct Multi-Step LSTM** | 一次性输出30分钟曲线、避免自回归误差累积、工业案例丰富 | 对突变响应存在滞后 | **✅ 最终选择** |
+| **LSTM直接多输出** | **Direct Multi-Step LSTM** | 一次性输出30分钟曲线、避免自回归误差累积、工业案例丰富 | 对突变响应存在滞后 | **最终选择** |
 
 **最终决策**：采用 **LSTM直接多输出架构** 作为基线模型，理由：
 

@@ -16,11 +16,13 @@ Step 4 训练好的模型输出的是**标准化后的温度差分**（每分钟
 
 ***最终效果***
 
-![image-20260524111903912](C:\Users\79984\AppData\Roaming\Typora\typora-user-images\image-20260524111903912.png)
+![image.png](https://img.vectorpeak.cn/obsidian/2026/05-06/20260605162739903.png?imageSlim)
+
+![image.png](https://img.vectorpeak.cn/obsidian/2026/05-06/20260605162749827.png?imageSlim)
 
 ***局部MAE评估***
 
-![image-20260524112020098](C:\Users\79984\AppData\Roaming\Typora\typora-user-images\image-20260524112020098.png)
+![image.png](https://img.vectorpeak.cn/obsidian/2026/05-06/20260605162801334.png?imageSlim)
 
  【上线模式】滚动预测 (每10分钟更新) 整体指标:
   MAE  (平均绝对误差): 0.2592 ℃
@@ -28,10 +30,6 @@ Step 4 训练好的模型输出的是**标准化后的温度差分**（每分钟
 ------
 
 ## 二、配置区详解：每个参数是干什么的？
-
-Python
-
-复制
 
 ```python
 DATASET_DIR = "./dataset/"          # Step 3 生成的 .npz 数据集存放路径
@@ -51,10 +49,6 @@ NUM_LAYERS = 3          # LSTM 层数（必须与 Step 4 训练时的模型结�
 ```
 
 ###  配置变量关系图
-
-plain
-
-复制
 
 ```plain
 原始数据（分钟级）
