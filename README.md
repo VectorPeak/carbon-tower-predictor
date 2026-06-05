@@ -1,4 +1,21 @@
-# 工业碳化塔取出液温度预测性维护系统
+# Carbon Tower Predictor | 工业碳化塔取出液温度预测性维护系统
+
+Industrial time-series forecasting pipeline for carbonation tower temperature prediction and predictive maintenance  
+面向工业碳化塔取出液温度预测与预测性维护的时序建模方案
+
+![python](https://img.shields.io/badge/python-3.10+-3776AB)
+![pytorch](https://img.shields.io/badge/PyTorch-LSTM-EE4C2C)
+![seq2seq](https://img.shields.io/badge/Seq2Seq-direct--multi--step-blue)
+![timeseries](https://img.shields.io/badge/time--series-forecasting-5C7CFA)
+![maintenance](https://img.shields.io/badge/predictive-maintenance-green)
+
+简体中文 | English later
+
+```text
+raw sensor data -> feature engineering -> diff dataset -> LSTM training -> rolling forecast
+```
+
+> 受企业数据保密要求限制，项目所涉及的原始数据集及中间数据产物不予公开；本文仅围绕技术方案、建模流程与工程实现进行讨论。
 
 ## 0x01.项目背景
 
@@ -8,7 +25,6 @@
 
 项目采用Seq2Seq思路，将工业传感器历史上下文映射到未来状态变化，通过直接多步预测学习设备运行趋势，从而实现对设备劣化趋势的提前感知
 
-**受企业数据保密要求限制，项目所涉及的原始数据集及中间数据产物不予公开；本文仅围绕技术方案、建模流程与工程实现进行讨论**
 ---
 
 ## 0x02.数据集选择与补充
@@ -288,4 +304,3 @@ industrial_predictor/
 3. **差分预测是工业大惯性系统的最优解**：预测"变化"比预测"绝对值"更符合物理直觉
 4. **损失函数决定模型性格**：MSE让模型保守，Huber+差分Loss让模型敏锐
 5. **可视化必须服务于操作工**：轨迹拼接的连续曲线，比离散的预测条带更有工程价值
-
