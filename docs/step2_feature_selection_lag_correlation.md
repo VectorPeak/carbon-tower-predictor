@@ -18,7 +18,7 @@ Step 1 给了你一张"大宽表"：每一行是 1 分钟，每一列是一个�
 
 **运行结果**
 
-![image-20260524111749659](C:\Users\79984\AppData\Roaming\Typora\typora-user-images\image-20260524111749659.png)
+![image.png](https://img.vectorpeak.cn/obsidian/2026/05-06/20260605162656135.png?imageSlim)
 
 ------
 
