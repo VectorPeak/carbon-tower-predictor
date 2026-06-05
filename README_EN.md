@@ -135,7 +135,7 @@ This design:        input [past 30 minutes] -> predict [minute-by-minute tempera
 
 - Reduces the burden of baseline drift. Different batches and seasons may have different temperature baselines, but physical response patterns remain similar.
 - Allows the model to focus on learning "disturbance response" rather than memorizing the current temperature.
-- Restoration formula: `future temperature = current known temperature + cumsum(predicted differences)`
+- Restoration formula: $T_{future} = T_{current} + cumsum(\Delta \hat{y})$
 
 ### 3.5 Stage 5: Loss Function Evolution: From MSE to Huber + Difference Loss
 
@@ -146,9 +146,9 @@ This design:        input [past 30 minutes] -> predict [minute-by-minute tempera
 
 **Second training attempt (introducing TrendAwareLoss)**:
 
-```python
-Total Loss = α · HuberLoss(absolute value) + β · HuberLoss(first-order difference / trend)
-```
+$$
+L_{total} = \alpha L_{Huber}(y, \hat{y}) + \beta L_{Huber}(\Delta y, \Delta \hat{y})
+$$
 
 - Penalizes not only inaccurate temperature values, but also inaccurate temperature-change trends or slopes.
 - Forces the model to follow steep waveform changes during sharp temperature drops.

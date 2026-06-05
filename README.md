@@ -132,7 +132,7 @@ raw sensor data -> feature engineering -> diff dataset -> LSTM training -> rolli
 **优势**：
 - 剥离基线漂移负担（不同批次、季节的温度基线不同，但物理响应规律相同）
 - 模型专注学习"扰动响应"而非"记忆当前温度"
-- 还原公式：`未来温度 = 当前已知温度 + cumsum(预测差分)`
+- 还原公式：$T_{future} = T_{current} + cumsum(\Delta \hat{y})$
 
 ### 3.5 第五阶段：损失函数进化——从MSE到Huber+差分损失
 
@@ -142,9 +142,9 @@ raw sensor data -> feature engineering -> diff dataset -> LSTM training -> rolli
 
 **第二次训练（引入差分损失 TrendAwareLoss）**：
 
-```python
-Total Loss = α · HuberLoss(绝对值) + β · HuberLoss(一阶差分/趋势)
-```
+$$
+L_{total} = \alpha L_{Huber}(y, \hat{y}) + \beta L_{Huber}(\Delta y, \Delta \hat{y})
+$$
 - 不仅惩罚"温度值不准"，更惩罚"温度变化趋势（斜率）不准"
 - 逼迫模型在温度急跌时，必须跟上波形的陡峭程度
 
