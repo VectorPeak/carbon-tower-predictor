@@ -292,8 +292,8 @@ industrial_predictor/
 ├── step1_merge_16_vars.py           # 数据清洗与宽表合并（修复datavalue识别）
 ├── step2_feature_selection_lag_correlation.py  # 滞后相关性分析与特征筛选
 ├── step3_dataset_diff_prediction.py      # 滑动窗口切分与标准化
-├── step4_model_training_v3_ultimate.py         # LSTM直接多输出训练
-├── step5_rolling_evaluation_diff_v2.py         # 差分还原、滚动评估与可视化
+├── step4_model_training.py         # LSTM直接多输出训练
+├── step5_rolling_evaluation.py         # 差分还原、滚动评估与可视化
 │
 └── README.md                            # 本文件
 ```

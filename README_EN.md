@@ -298,8 +298,8 @@ industrial_predictor/
 ├── step1_merge_16_vars.py             # Data cleaning and wide-table merge
 ├── step2_feature_selection_lag_correlation.py  # Lag-correlation analysis and feature selection
 ├── step3_dataset_diff_prediction.py   # Sliding-window slicing and normalization
-├── step4_model_training_v3_ultimate.py # Direct multi-output LSTM training
-├── step5_rolling_evaluation_diff_v2.py # Difference restoration, rolling evaluation, and visualization
+├── step4_model_training.py # Direct multi-output LSTM training
+├── step5_rolling_evaluation.py # Difference restoration, rolling evaluation, and visualization
 │
 └── README.md                          # This file
 ```

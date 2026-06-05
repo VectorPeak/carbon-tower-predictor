@@ -1,4 +1,4 @@
-# 📘 step2_feature_selection_lag_correlation教学文档：
+# step2_feature_selection_lag_correlation 技术说明
 
 # 滞后相关性分析——找到温度的"领先预告牌"
 

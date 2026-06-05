@@ -1,4 +1,4 @@
-# 📘 step4_model_training_v3_ultimate 教学文档：
+# step4_model_training 技术说明
 
 # LSTM 差分预测模型训练——让神经网络学习"温度扰动响应"
 

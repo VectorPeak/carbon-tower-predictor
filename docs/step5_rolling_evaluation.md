@@ -1,4 +1,4 @@
-# 📘 step5_rolling_evaluation_diff_v2 教学文档：
+# step5_rolling_evaluation 技术说明
 
 # 差分还原评估 + DCS 实时滚动模拟
 

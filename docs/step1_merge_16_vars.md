@@ -1,4 +1,4 @@
-# 📘 step1_merge_16_vars 教学文档：
+# step1_merge_16_vars 技术说明
 
 # 工业多源 CSV 数据清洗与宽表合并
 

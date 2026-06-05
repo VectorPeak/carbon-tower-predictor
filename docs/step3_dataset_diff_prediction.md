@@ -1,4 +1,4 @@
-# 📘 step3_dataset_diff_prediction 教学文档：
+# step3_dataset_diff_prediction 技术说明
 
 # 差分预测数据集构造——让模型学习"温度怎么变"，而非"温度是多少"
 
