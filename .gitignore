@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.venv/
+.ruff_cache/
+
+# Large generated/runtime files can stay local unless you explicitly want to version them.
+artifacts/models/*.pth
+data/raw/
+data/merged/
+data/datasets/

@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "carbon-tower-predictor"
+version = "0.1.0"
+description = "Industrial carbonation tower time-series prediction pipeline."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "pyarrow",
+    "torch",
+]
+
+[project.scripts]
+carbon-pipeline = "carbon_pipeline.cli:main"
+carbon-go = "carbon_pipeline.cli:main_go"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/carbon_pipeline"]
